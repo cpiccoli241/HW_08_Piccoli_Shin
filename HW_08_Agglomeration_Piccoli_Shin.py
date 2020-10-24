@@ -121,10 +121,17 @@ def agglomerative_clustering(dataf):
         point = data_point(vector)
         datapoints.append(point)
 
+    clusters = []
     distances = []
     for data in datapoints:
         for otherdata in datapoints:
-            distance = euc
+            distance = euc_distance(data, otherdata)
+            distances.append(distance)
+        min(distances)
+
+
+
+
 
 
 def main():
