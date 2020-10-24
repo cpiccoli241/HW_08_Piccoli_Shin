@@ -13,8 +13,16 @@ class data_point:
         else:
             self.location = vector_location
 
+
 def euc_distance(data_point_1, data_point_2):
+    '''
+    Calculates the euclidean distance from data_point_1 to data_point_2
+    :param data_point_1:
+    :param data_point_2:
+    :return: the distance between points 1 and 2
+    '''
     return np.linalg.norm(data_point_1.location-data_point_2.location)
+
 
 class cluster:
     '''
@@ -25,16 +33,16 @@ class cluster:
     def __init__(self, cluster1, cluster2):
         if isinstance(cluster1, data_point):
             if isinstance(cluster2, data_point):
-                self.center = cluster1
                 self.data_points = [cluster1, cluster2]
             else:
                 self.data_points = [cluster1].extend(cluster2.data_points)
         else:
             self.data_points = cluster1.data_points.extend(cluster2.data_points)
 
+        self.new_center(cluster1, cluster2)
         self.left_cluster = cluster1
         self.right_cluster = cluster2
 
 
-    def new_center(self, otherCluster):
+    def new_center(self, cluster1, cluster2):
         return;
