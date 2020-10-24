@@ -124,7 +124,9 @@ def agglomerative_clustering(dataf):
 
     # Clustering starts
     clusters = []
-    compute_distances(cluster, datapoints)
+    distances = compute_distances(cluster, datapoints)
+
+    cluster1, distances = clustering(distances)
 
 
 def compute_distances(data_sets):
@@ -139,14 +141,27 @@ def compute_distances(data_sets):
     return distances
 
 
+def compute_distance(datasets, cluster, distances):
+    for data in datasets:
+        distances.append([cluster, data, euc_distance(cluster, data)])
+
+
 def min_distance(dataf):
     return dataf.min(level = "distance")
 
 
-def clustering(distances, dataf):
+def clustering(distances):
     best_row = min_distance(distances)
-    dataf.drop('')
-    return cluster(best_row["cluster1"], best_row["cluster2"])
+    cluster1 = best_row["cluster1"]
+    cluster2 = best_row["cluster2"]
+
+    # drop all the rows with the clusters 1 or 2 in them
+    distances = distances[distances["cluster1"] != cluster1]
+    distances = distances[distances["cluster1"] != cluster2]
+    distances = distances[distances["cluster2"] != cluster1]
+    distances = distances[distances["cluster2"] != cluster2]
+
+    return cluster(cluster1, cluster2), distances
 
 
 def main():
