@@ -143,9 +143,9 @@ def min_distance(dataf):
     return dataf.min(level = "distance")
 
 
-def clustering(distances):
+def clustering(distances, dataf):
     best_row = min_distance(distances)
-
+    dataf.drop('')
     return cluster(best_row["cluster1"], best_row["cluster2"])
 
 
