@@ -11,8 +11,9 @@ class cluster:
     '''
     def __init__(self, cluster1, cluster2):
         if isinstance(cluster1, data_point):
-
-        if isinstance(cluster2, data_point):
+            if isinstance(cluster2, data_point):
+                self.center = cluster1
 
 
     def newCenter(self, otherCluster):
+        return;
