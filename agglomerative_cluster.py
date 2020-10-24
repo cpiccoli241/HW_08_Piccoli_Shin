@@ -26,6 +26,7 @@ def euc_distance(data_point_1, data_point_2):
     return np.linalg.norm(data_point_1.location-data_point_2.location)
 
 
+
 class cluster:
     '''
     number datapoints

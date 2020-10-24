@@ -3,7 +3,7 @@ from agglomerative_cluster import data_point, cluster
 import pandas as pd
 
 
-def cross_correlation(dataf, ID='ID'):
+def cross_correlation(dataf):
     """
     Takes dataf and calculates the cross correlation coefficient
     removes the column ID, from the dataframe
@@ -11,13 +11,24 @@ def cross_correlation(dataf, ID='ID'):
     :return cross_correlation: pands.Dataframe
     """
 
+
+    # calculate correlation
+    correlation = remove_id(dataf).corr(method='pearson')
+    return correlation
+
+
+def remove_id(dataf, ID ='ID'):
+    '''
+    renmove the column ID from the dataframe
+    :param dataf:type pandas.dataframe
+    :param ID:the key value to remove
+    :return: dataframe without the column id
+    '''
     # get a list of the dataframe columns
     keys = dataf.columns.values.tolist()
     # remove the ID for correlation
     keys.remove(ID)
-    # calculate correlation
-    correlation = dataf[keys].corr(method='pearson')
-    return correlation
+    return dataf[keys]
 
 
 def get_strongest_correlated(dataf, column):
@@ -43,6 +54,7 @@ def get_strongest_correlated(dataf, column):
     # return the best correlation and the column name
     return best_correlation, columns[best_index]
 
+
 def find_least_correlated(corrs_dict):
     worst_correlation = 1
     worst_atr = ''
@@ -52,6 +64,7 @@ def find_least_correlated(corrs_dict):
             worst_atr = key
 
     return worst_correlation, worst_atr
+
 
 def question_2(dataf):
     '''
@@ -109,6 +122,7 @@ def agglomerative_clustering(dataf):
         datapoints.append(point)
 
 
+
 def main():
     parser = ArgumentParser()
     # error if they as for help
@@ -124,6 +138,7 @@ def main():
     # cross correlation od pd
     cross = cross_correlation(shoping_cart_data)
     question_2(cross)
+    
 
 if __name__ == '__main__':
     main()
