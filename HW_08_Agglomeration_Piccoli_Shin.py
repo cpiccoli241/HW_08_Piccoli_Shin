@@ -124,17 +124,29 @@ def agglomerative_clustering(dataf):
 
     # Clustering starts
     clusters = []
-    minDistance = maxsize
-    for data in datapoints:
-        for otherdata in datapoints:
-            distance = euc_distance(data, otherdata)
-            if distance < minDistance:
-                minDistance = distance
+    compute_distances(cluster, datapoints)
 
 
+def compute_distances(data_sets):
+    distances = pd.DataFrame(data = None, index=["cluster1", "cluster2", "distance"])
+    data_copy = list(data_sets)
+
+    for data_1 in data_sets:
+        data_copy.remove(data_1)
+        for data_2 in data_copy:
+            distances.append([data_1, data_2, euc_distance(data_1, data_2)])
+
+    return distances
 
 
+def min_distance(dataf):
+    return dataf.min(level = "distance")
 
+
+def clustering(distances):
+    best_row = min_distance(distances)
+
+    return cluster(best_row["cluster1"], best_row["cluster2"])
 
 
 def main():
