@@ -11,7 +11,6 @@ class data_point:
         if len(vector_location) != size:
             self = None
         else:
-            self.location = vector_location
             self.center = vector_location
             self.number_of_points = 1
 
@@ -23,7 +22,7 @@ def euc_distance(data_point_1, data_point_2):
     :param data_point_2:
     :return: the distance between points 1 and 2
     '''
-    return np.linalg.norm(data_point_1.location-data_point_2.location)
+    return np.linalg.norm(data_point_1.center-data_point_2.center)
 
 
 
