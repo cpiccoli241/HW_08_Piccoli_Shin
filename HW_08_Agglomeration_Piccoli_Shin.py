@@ -124,9 +124,13 @@ def agglomerative_clustering(dataf):
 
     # Clustering starts
     clusters = []
+    # Compute all the distances
     distances = compute_distances(cluster, datapoints)
-
+    # Grab the minimum distance and cluster the 2 associated clusters
     cluster1, distances = clustering(distances)
+
+
+
 
 
 def compute_distances(data_sets):
