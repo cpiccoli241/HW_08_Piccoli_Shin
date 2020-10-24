@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from agglomerative_cluster import data_point, cluster
+from agglomerative_cluster import data_point, euc_distance, cluster
 import pandas as pd
 
 
@@ -121,6 +121,10 @@ def agglomerative_clustering(dataf):
         point = data_point(vector)
         datapoints.append(point)
 
+    distances = []
+    for data in datapoints:
+        for otherdata in datapoints:
+            distance = euc
 
 
 def main():
