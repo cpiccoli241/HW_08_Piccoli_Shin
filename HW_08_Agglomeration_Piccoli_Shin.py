@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import agglomerative_cluster
 import pandas as pd
 
 
@@ -90,6 +91,18 @@ def question_2(dataf):
     and memorising from flash cards are correlated with good exam scores, but this does not imply 
     that memorising flash cards is correlated with deep understanding of the course material.
     '''
+
+def agglomerative_clustering(dataf):
+    '''
+    This function does the clustering algorithm. And stores the clusters into a tree for ease of use
+    First we iterate through the dataframe and make each point into its own cluster
+    then keep clustering ...
+    :param dataf: The dataframe that has the data
+    :return: agglomeratively clustered data
+    '''
+    for index in range(len(dataf)):
+
+
 
 def main():
     parser = ArgumentParser()
