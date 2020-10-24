@@ -12,6 +12,8 @@ class data_point:
             self = None
         else:
             self.location = vector_location
+            self.center = vector_location
+            self.number_of_points = 1
 
 
 def euc_distance(data_point_1, data_point_2):
@@ -45,4 +47,6 @@ class cluster:
 
 
     def new_center(self, cluster1, cluster2):
-        return;
+        weighted_component = np.average([cluster1.center, cluster2.center],
+                                        weights = [cluster1.number_of_points, cluster2.number_of_points])
+        return weighted_component
