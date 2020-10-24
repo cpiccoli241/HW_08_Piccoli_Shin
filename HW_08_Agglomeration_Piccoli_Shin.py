@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-import agglomerative_cluster
+from agglomerative_cluster import data_point, cluster
 import pandas as pd
 
 
@@ -100,8 +100,13 @@ def agglomerative_clustering(dataf):
     :param dataf: The dataframe that has the data
     :return: agglomeratively clustered data
     '''
-    for index in range(len(dataf)):
 
+    # This loop takes in all 850 points and makes 850 datapoints
+    datapoints = []
+    for index in range(len(dataf)):
+        vector = dataf.iloc[index].to_numpy()
+        point = data_point(vector)
+        datapoints.append(point)
 
 
 def main():
