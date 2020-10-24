@@ -124,9 +124,13 @@ def agglomerative_clustering(dataf):
 
     # Clustering starts
     clusters = []
+
+    distances = compute_distances(datapoints)
+
     while len(distances) > 1:
-        distances = compute_distances(cluster, datapoints)
         cluster1, distances, datapoints = clustering(distances, datapoints)
+
+    return cluster1
 
 
 def compute_distances(data_sets):
@@ -141,7 +145,7 @@ def compute_distances(data_sets):
     for data_1 in data_sets:
         data_copy.remove(data_1)
         for data_2 in data_copy:
-            distances.append([data_1, data_2, euc_distance(data_1, data_2)])
+            distances = distances.append([[data_1, data_2, euc_distance(data_1, data_2)]])
 
     return distances
 
@@ -196,7 +200,10 @@ def main():
     # cross correlation od pd
     cross = cross_correlation(shoping_cart_data)
     question_2(cross)
-    
+
+    shoping_cart_data = remove_id(shoping_cart_data)
+    print(agglomerative_clustering(shoping_cart_data))
+
 
 if __name__ == '__main__':
     main()
