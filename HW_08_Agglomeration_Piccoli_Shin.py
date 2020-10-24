@@ -125,15 +125,16 @@ def agglomerative_clustering(dataf):
     # Clustering starts
     clusters = []
     while len(distances) > 1:
-        # Compute all the distances
         distances = compute_distances(cluster, datapoints)
-        # Grab the minimum distance and cluster of the 2 associated clusters
-        cluster1, distances = clustering(distances)
-
-
+        cluster1, distances, datapoints = clustering(distances, datapoints)
 
 
 def compute_distances(data_sets):
+    '''
+    computes all the distances between points
+    :param data_sets:
+    :return:
+    '''
     distances = pd.DataFrame(data = None, index=["cluster1", "cluster2", "distance"])
     data_copy = list(data_sets)
 
@@ -146,6 +147,13 @@ def compute_distances(data_sets):
 
 
 def compute_distance(datasets, cluster, distances):
+    '''
+    computes the distance between one cluster, and the other datasets
+    :param datasets:
+    :param cluster:
+    :param distances:
+    :return:
+    '''
     for data in datasets:
         distances.append([cluster, data, euc_distance(cluster, data)])
 
@@ -154,7 +162,7 @@ def min_distance(dataf):
     return dataf.min(level = "distance")
 
 
-def clustering(distances):
+def clustering(distances, data_sets):
     best_row = min_distance(distances)
     cluster1 = best_row["cluster1"]
     cluster2 = best_row["cluster2"]
@@ -164,8 +172,13 @@ def clustering(distances):
     distances = distances[distances["cluster1"] != cluster2]
     distances = distances[distances["cluster2"] != cluster1]
     distances = distances[distances["cluster2"] != cluster2]
+    new_cluster = cluster(cluster1, cluster2)
 
-    return cluster(cluster1, cluster2), distances
+    compute_distance(data_sets, new_cluster, distances)
+    data_sets.remove(cluster1)
+    data_sets.remove(cluster2)
+
+    return new_cluster, distances, data_sets
 
 
 def main():
