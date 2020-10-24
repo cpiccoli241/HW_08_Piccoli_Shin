@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from agglomerative_cluster import data_point, euc_distance, cluster
 import pandas as pd
+from sys import maxsize
 
 
 def cross_correlation(dataf):
@@ -121,13 +122,15 @@ def agglomerative_clustering(dataf):
         point = data_point(vector)
         datapoints.append(point)
 
+    # Clustering starts
     clusters = []
-    distances = []
+    minDistance = maxsize
     for data in datapoints:
         for otherdata in datapoints:
             distance = euc_distance(data, otherdata)
-            distances.append(distance)
-        min(distances)
+            if distance < minDistance:
+                minDistance = distance
+
 
 
 
