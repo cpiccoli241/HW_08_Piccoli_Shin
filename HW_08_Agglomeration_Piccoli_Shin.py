@@ -197,16 +197,16 @@ def compute_distances(data_sets):
     return distances
 
 
-def compute_distance(datasets, cluster, distances):
-    '''
-    computes the distance between one cluster, and the other datasets
-    :param datasets:
-    :param cluster:
-    :param distances:
-    :return:
-    '''
-    for data in datasets:
-        distances.append([cluster, data, euc_distance(cluster, data)])
+# def compute_distance(datasets, cluster, distances):
+#     '''
+#     computes the distance between one cluster, and the other datasets
+#     :param datasets:
+#     :param cluster:
+#     :param distances:
+#     :return:
+#     '''
+#     for data in datasets:
+#         distances.append([cluster, data, euc_distance(cluster, data)])
 
 
 def min_distance(dataf):
@@ -310,21 +310,22 @@ def main():
 
 
     #find the cluster
-    #cluster1, linkage_matrix, list_clusters = agglomerative_clustering(shoping_cart_data)
+    cluster1, linkage_matrix, list_clusters = agglomerative_clustering(shoping_cart_data)
 
 
     # makes the dendrogram from the linkage list
-    #dg.dendrogram_plot(linkage_matrix, 20)
+    dg.dendrogram_plot(linkage_matrix, 20)
 
-    cluster1, linkage_matrix, six_clusters = get_6_clusters(shoping_cart_data)
+    # This is commented out since it is not important to the main program
+    # cluster1, linkage_matrix, six_clusters = get_6_clusters(shoping_cart_data)
+    # for cluster in six_clusters['cluster']:
+    #     print("ID: ", cluster.index)
+    #     print("\tCenter: ", np.array_str(cluster.center, precision=2))
+    #     print("\tSize: ", cluster.number_of_points)
+    #
+    # print(np.array_str(get_weighted_center(six_clusters), precision=2))
 
-    for cluster in six_clusters['cluster']:
-        print("ID: ", cluster.index)
-        print("\tCenter: ", np.array_str(cluster.center, precision=2))
-        print("\tSize: ", cluster.number_of_points)
-
-    print(np.array_str(get_weighted_center(six_clusters), precision=2))
-
+    # KMeans clustering its commented out since it is not important to main program
     # kmeans(shoping_cart_data)
 
 def get_weighted_center(dataf):
