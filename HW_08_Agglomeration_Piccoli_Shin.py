@@ -60,6 +60,11 @@ def get_strongest_correlated(dataf, column):
 
 
 def find_least_correlated(corrs_dict):
+    '''
+    finds the worst correlation from the dict
+    :param corrs_dict:
+    :return: worst correlation
+    '''
     worst_correlation = 1
     worst_atr = ''
     for key in corrs_dict:
@@ -70,6 +75,11 @@ def find_least_correlated(corrs_dict):
     return worst_correlation, worst_atr
 
 def find_best_correlated(corrs_dict):
+    '''
+    Finds the best correlation from the dict
+    :param corrs_dict:
+    :return: best correlation
+    '''
     best_correlation = 0
     best_atr = ''
     for key in corrs_dict:
@@ -328,6 +338,12 @@ def main():
     # kmeans(shoping_cart_data)
 
 def get_weighted_center(dataf):
+    '''
+    Returns the weighted center of the clusters in dataf
+    dataf is a dataframe of clusters
+    :param dataf:type pandas.Dataframe one row of clusters
+    :return: np.array that is the wieghted center of the clusters
+    '''
     centers = []
     sizes = []
 
@@ -341,6 +357,11 @@ def get_weighted_center(dataf):
 
 
 def get_6_clusters(dataf):
+    '''
+    runs the clustring program and returns when there are only 6 clusters left.
+    :param dataf: pandas.Dataframe the shopping data
+    :return: last cluster made, linkage_matrix, list of 6 clusters
+    '''
     return agglomerative_clustering(dataf, number_of_clusters=6)
 
 

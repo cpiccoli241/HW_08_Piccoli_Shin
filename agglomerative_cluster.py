@@ -57,6 +57,12 @@ class cluster:
 
 
     def new_center(self, cluster1, cluster2):
+        '''
+        Finds the new center of the cluster1, and cluster2 uses weighted averagee
+        :param cluster1: cluster
+        :param cluster2: cluster
+        :return: np.array of type
+        '''
         weighted_component = np.average([cluster1.center, cluster2.center], axis=0,
                                         weights = [cluster1.number_of_points, cluster2.number_of_points])
         return weighted_component
