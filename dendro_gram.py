@@ -4,7 +4,11 @@ from agglomerative_cluster import cluster
 import HW_08_Agglomeration_Piccoli_Shin as  ps
 import pandas as pd
 
-def test():
+def module_agglomeration():
+    '''
+    Uses scipy's built in agglomeration
+    :return:
+    '''
     shoping_cart_data = pd.read_csv('HW_PCA_SHOPPING_CART_v896.csv', index_col=False, error_bad_lines=False, skipinitialspace=True)
     pd.set_option('display.max_rows', None, 'display.max_columns', None)
     shoping_cart_data = ps.remove_id(shoping_cart_data)
@@ -26,10 +30,16 @@ def test():
     print(Z)
 
 def dendrogram_plot(linkage, depth):
-    # there are certainly 5 clusters
+    '''
+    Makes a dendrogram using the linkage matrix, using the last
+    clusters made where depth is the number left
+    :param linkage: scipy linkage matrix
+    :param depth: the number of last depth clusters to graph
+    :return:
+    '''
+    # there are certainly 6 clusters
     dn2 = hierarchy.dendrogram(linkage, truncate_mode='lastp', p=depth)
     plt.show()
-    return;
 
 if __name__ == '__main__':
     test()
