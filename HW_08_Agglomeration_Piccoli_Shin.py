@@ -4,6 +4,7 @@ import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
 import dendro_gram as dg
+from sklearn.cluster import KMeans
 
 
 def cross_correlation(dataf):
@@ -216,6 +217,13 @@ def clustering(distances, data_sets, index):
 
     return new_cluster, cluster1_id, cluster2_id
 
+def kmeans(dataf):
+    mat = dataf.values
+    km = KMeans(n_clusters=6)
+    km.fit(mat)
+    labels = km.labels_
+    results = pd.DataFrame([dataf.index, labels]).T
+    return results
 
 def main():
     parser = ArgumentParser()
@@ -223,7 +231,7 @@ def main():
     parser.add_argument('FILE_IN_NAME', help='Enter the file name you would like to use. Include any directories',)
 
     # get the filename argument
-    FILE_IN_NAME = parser.parse_args().FILE_IN_NAME
+    FILE_IN_NAME = "HW_PCA_SHOPPING_CART_v896.csv"
 
     # read in the csv as a Dataframe
     shoping_cart_data = pd.read_csv(FILE_IN_NAME, index_col = False, error_bad_lines=False, skipinitialspace=True)
@@ -239,7 +247,7 @@ def main():
     cluster1, linkage_matrix = agglomerative_clustering(shoping_cart_data)
     print(cluster1)
     dg.dendrogram_plot(linkage_matrix, 6)
-
+    kmresult = kmeans(shoping_cart_data)
 
 if __name__ == '__main__':
     main()
