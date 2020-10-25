@@ -4,6 +4,7 @@ import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
 import dendro_gram as dg
+from sklearn.cluster import KMeans
 import numpy as np
 
 def cross_correlation(dataf):
@@ -228,6 +229,32 @@ def clustering(distances, data_sets, index):
 
     return new_cluster, cluster1_id, cluster2_id
 
+def kmeans(dataf):
+    mat = dataf.values
+    km = KMeans(n_clusters=6)
+    km.fit(mat)
+    labels = km.labels_
+    zeroCount = 0
+    oneCount = 0
+    twoCount = 0
+    threeCount = 0
+    fourCount = 0
+    fiveCount = 0
+    for label in labels:
+        if label == 0:
+            zeroCount += 1
+        if label == 1:
+            oneCount += 1
+        if label == 2:
+            twoCount += 1
+        if label == 3:
+            threeCount += 1
+        if label == 4:
+            fourCount += 1
+        if label == 5:
+            fiveCount += 1
+    print(zeroCount, oneCount, twoCount, threeCount, fourCount, fiveCount)
+    print(km.cluster_centers_)
 
 def main():
     parser = ArgumentParser()
@@ -235,7 +262,7 @@ def main():
     parser.add_argument('FILE_IN_NAME', help='Enter the file name you would like to use. Include any directories',)
 
     # get the filename argument
-    FILE_IN_NAME = parser.parse_args().FILE_IN_NAME
+    FILE_IN_NAME = "HW_PCA_SHOPPING_CART_v896.csv"
 
     # read in the csv as a Dataframe
     shoping_cart_data = pd.read_csv(FILE_IN_NAME, index_col = False, error_bad_lines=False, skipinitialspace=True)
@@ -262,6 +289,8 @@ def main():
         print("\tSize: ", cluster.number_of_points)
 
     print(np.array_str(get_weighted_center(six_clusters), precision=2))
+
+    # kmeans(shoping_cart_data)
 
 def get_weighted_center(dataf):
     centers = []
