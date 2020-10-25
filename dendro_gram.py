@@ -22,8 +22,10 @@ def test():
     plt.scatter(k)
 
 
-def dendrogram_plot(clusters):
-
+def dendrogram_plot(linkage, depth):
+    # there are certainly 5 clusters
+    dn2 = hierarchy.dendrogram(linkage, truncate_mode='lastp', p=depth)
+    plt.show()
     return;
 
 if __name__ == '__main__':

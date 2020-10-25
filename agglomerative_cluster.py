@@ -52,25 +52,6 @@ class cluster:
         self.left_cluster = cluster1
         self.right_cluster = cluster2
 
-    def get_linkage_matrix(self):
-        '''
-
-        :return: linkage matrix for dendrogram plotting
-        '''
-
-        matrix = [[self.left_cluster.index, self.right_cluster.index, self.distance, self.number_of_points]]
-
-        if isinstance(self.left_cluster, data_point):
-            if isinstance(self.right_cluster, data_point):
-                return matrix
-
-            else:
-                return self.right_cluster.get_linkage_matrix() + matrix
-
-        elif isinstance(self.right_cluster, data_point):
-            return self.left_cluster.get_linkage_matrix() + matrix
-
-        return self.left_cluster.get_linkage_matrix() + self.right_cluster.get_link_age_matrix() + matrix
 
 
     def new_center(self, cluster1, cluster2):

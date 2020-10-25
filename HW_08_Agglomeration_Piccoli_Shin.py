@@ -3,7 +3,7 @@ from agglomerative_cluster import data_point, euc_distance, cluster
 import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
-from sys import maxsize
+import dendro_gram as dg
 
 
 def cross_correlation(dataf):
@@ -129,6 +129,7 @@ def agglomerative_clustering(dataf):
 
     # Clustering starts
     cluster_indexs = len(dataf)
+    linkage_matrix = []
     while len(datapoints) > 1:
         distances = compute_distance_matrix(cluster_centers)
         new_cluster, cluster1_id, cluster2_id = clustering(distances, datapoints, cluster_indexs)
@@ -145,9 +146,10 @@ def agglomerative_clustering(dataf):
         cluster_centers.drop(cluster2_id, axis=0, inplace=True)
 
         cluster_centers = cluster_centers.append(pd.Series(new_cluster.center, dataf.columns), ignore_index=True)
+        linkage_matrix.append([new_cluster.left_cluster.index, new_cluster.right_cluster.index,
+                              new_cluster.distance, new_cluster.number_of_points])
 
-
-    return new_cluster
+    return new_cluster, linkage_matrix
 
 def compute_distance_matrix(dataf):
     matrix = pd.DataFrame(
@@ -234,9 +236,9 @@ def main():
     #remove ids
     shoping_cart_data = remove_id(shoping_cart_data)
     #find the cluster
-    cluster1 = agglomerative_clustering(shoping_cart_data)
-    print(cluster1.get_linkage_matrix())
+    cluster1, linkage_matrix = agglomerative_clustering(shoping_cart_data)
     print(cluster1)
+    dg.dendrogram_plot(linkage_matrix, 6)
 
 
 if __name__ == '__main__':
