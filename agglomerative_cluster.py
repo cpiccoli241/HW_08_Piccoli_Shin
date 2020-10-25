@@ -65,12 +65,12 @@ class cluster:
                 return matrix
 
             else:
-                return self.right_cluster.get_link_age_matrix() +matrix
+                return self.right_cluster.get_linkage_matrix() + matrix
 
         elif isinstance(self.right_cluster, data_point):
             return self.left_cluster.get_linkage_matrix() + matrix
 
-        return self.left_cluster.get_linkage_matrix()+self.right_cluster.get_link_age_matrix() +matrix
+        return self.left_cluster.get_linkage_matrix() + self.right_cluster.get_link_age_matrix() + matrix
 
 
     def new_center(self, cluster1, cluster2):
