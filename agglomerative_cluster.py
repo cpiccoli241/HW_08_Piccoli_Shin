@@ -15,14 +15,15 @@ class data_point:
             self.number_of_points = 1
 
 
-def euc_distance(data_point_1, data_point_2):
+def euc_distance(row):
     '''
     Calculates the euclidean distance from data_point_1 to data_point_2
-    :param data_point_1:
-    :param data_point_2:
+    :param row:type Pandas.Series
     :return: the distance between points 1 and 2
     '''
-    return np.linalg.norm(data_point_1.center-data_point_2.center)
+    data_point_1 = row["cluster1"]
+    data_point_2 = row["cluster2"]
+    row["distance"] = np.linalg.norm(data_point_1.center-data_point_2.center)
 
 
 
