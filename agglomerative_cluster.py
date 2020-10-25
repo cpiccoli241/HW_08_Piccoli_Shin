@@ -1,5 +1,6 @@
 
 import numpy as np
+from sys import maxsize
 
 class data_point:
     def __init__(self, vector_location, index, size=20):
@@ -11,10 +12,12 @@ class data_point:
         if len(vector_location) != size:
             self = None
         else:
+            self.distance = maxsize
             self.center = vector_location
             self.number_of_points = 1
             self.index = index
-
+    def get_top(self, depth):
+        return [self]
 
 def euc_distance(row):
     '''
@@ -51,7 +54,6 @@ class cluster:
         self.center = self.new_center(cluster1, cluster2)
         self.left_cluster = cluster1
         self.right_cluster = cluster2
-
 
 
     def new_center(self, cluster1, cluster2):

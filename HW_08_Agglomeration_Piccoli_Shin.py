@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.spatial.distance import squareform
 from scipy.spatial.distance import pdist
 import dendro_gram as dg
-
+import numpy as np
 
 def cross_correlation(dataf):
     """
@@ -68,6 +68,15 @@ def find_least_correlated(corrs_dict):
 
     return worst_correlation, worst_atr
 
+def find_best_correlated(corrs_dict):
+    best_correlation = 0
+    best_atr = ''
+    for key in corrs_dict:
+        if best_correlation < corrs_dict[key][0]:
+            best_correlation = corrs_dict[key][0]
+            best_atr = key
+
+    return corrs_dict[best_atr], best_atr
 
 def question_2(dataf):
     '''
@@ -80,6 +89,9 @@ def question_2(dataf):
     for key in keys:
         corr, atr = get_strongest_correlated(dataf, key)
         correlations.update({key : [corr, atr]})
+
+    best_atr, best_cor = find_best_correlated(correlations)
+    print(best_atr, best_cor)
 
     # this is explicitly asked
     print("Fish: ", correlations['Fish'])
@@ -108,7 +120,7 @@ def question_2(dataf):
     that memorising flash cards is correlated with deep understanding of the course material.
     '''
 
-def agglomerative_clustering(dataf):
+def agglomerative_clustering(dataf, number_of_clusters = 1):
     '''
     This function does the clustering algorithm. And stores the clusters into a tree for ease of use
     First we iterate through the dataframe and make each point into its own cluster
@@ -130,7 +142,7 @@ def agglomerative_clustering(dataf):
     # Clustering starts
     cluster_indexs = len(dataf)
     linkage_matrix = []
-    while len(datapoints) > 1:
+    while len(datapoints) != number_of_clusters:
         distances = compute_distance_matrix(cluster_centers)
         new_cluster, cluster1_id, cluster2_id = clustering(distances, datapoints, cluster_indexs)
         cluster_indexs+=1
@@ -149,7 +161,7 @@ def agglomerative_clustering(dataf):
         linkage_matrix.append([new_cluster.left_cluster.index, new_cluster.right_cluster.index,
                               new_cluster.distance, new_cluster.number_of_points])
 
-    return new_cluster, linkage_matrix
+    return new_cluster, linkage_matrix, datapoints
 
 def compute_distance_matrix(dataf):
     matrix = pd.DataFrame(
@@ -236,9 +248,36 @@ def main():
     #remove ids
     shoping_cart_data = remove_id(shoping_cart_data)
     #find the cluster
-    cluster1, linkage_matrix = agglomerative_clustering(shoping_cart_data)
-    print(cluster1)
-    dg.dendrogram_plot(linkage_matrix, 6)
+    #cluster1, linkage_matrix, list_clusters = agglomerative_clustering(shoping_cart_data)
+
+
+    # makes the dendrogram from the linkage list
+    #dg.dendrogram_plot(linkage_matrix, 20)
+
+    cluster1, linkage_matrix, six_clusters = get_6_clusters(shoping_cart_data)
+
+    for cluster in six_clusters['cluster']:
+        print("ID: ", cluster.index)
+        print("\tCenter: ", np.array_str(cluster.center, precision=2))
+        print("\tSize: ", cluster.number_of_points)
+
+    print(np.array_str(get_weighted_center(six_clusters), precision=2))
+
+def get_weighted_center(dataf):
+    centers = []
+    sizes = []
+
+    for cluster in dataf['cluster']:
+        centers.append(cluster.center)
+        sizes.append(cluster.number_of_points)
+
+    weighted_component = np.average(centers, axis=0,
+                                    weights=sizes)
+    return weighted_component
+
+
+def get_6_clusters(dataf):
+    return agglomerative_clustering(dataf, number_of_clusters=6)
 
 
 if __name__ == '__main__':
