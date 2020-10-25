@@ -316,7 +316,7 @@ def main():
     # makes the dendrogram from the linkage list
     dg.dendrogram_plot(linkage_matrix, 20)
 
-    # This is commented out since it is not important to the main program
+    # This is commented out since it is not important to the main program!
     # cluster1, linkage_matrix, six_clusters = get_6_clusters(shoping_cart_data)
     # for cluster in six_clusters['cluster']:
     #     print("ID: ", cluster.index)
