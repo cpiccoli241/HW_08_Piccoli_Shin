@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
 from agglomerative_cluster import data_point, euc_distance, cluster
 import pandas as pd
+from scipy.spatial.distance import squareform
+from scipy.spatial.distance import pdist
 from sys import maxsize
 
 
@@ -125,13 +127,19 @@ def agglomerative_clustering(dataf):
     # Clustering starts
     clusters = []
 
-    distances = compute_distances(datapoints)
+    distances = compute_distance_matrix(dataf)
 
     while len(distances) > 1:
         cluster1, distances, datapoints = clustering(distances, datapoints)
 
     return cluster1
 
+def compute_distance_matrix(dataf):
+    matrix = pd.DataFrame(
+        squareform(pdist(dataf)),
+        columns=dataf.index,
+        index=dataf.index)
+    return matrix
 
 def compute_distances(data_sets):
     '''
@@ -139,13 +147,13 @@ def compute_distances(data_sets):
     :param data_sets:
     :return:
     '''
-    distances = pd.DataFrame(data = None, index=["cluster1", "cluster2", "distance"])
+    distances = pd.DataFrame(data = {"cluster1" : data_sets, "cluster2" : data_sets}, columns=["cluster1", "cluster2", "distance"])
     data_copy = list(data_sets)
 
     for data_1 in data_sets:
         data_copy.remove(data_1)
         for data_2 in data_copy:
-            distances = distances.append([[data_1, data_2, euc_distance(data_1, data_2)]])
+            distances = distances.append({"cluster1":data_1, "cluster2":data_2, "distance":euc_distance(data_1, data_2)}, ignore_index=True)
 
     return distances
 
