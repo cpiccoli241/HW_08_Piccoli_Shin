@@ -254,7 +254,8 @@ def kmeans(dataf):
         if label == 5:
             fiveCount += 1
     print(zeroCount, oneCount, twoCount, threeCount, fourCount, fiveCount)
-    print(km.cluster_centers_)
+    print(np.array_str(km.cluster_centers_, precision=2))
+
 
 def main():
     parser = ArgumentParser()
@@ -274,6 +275,8 @@ def main():
 
     #remove ids
     shoping_cart_data = remove_id(shoping_cart_data)
+
+
     #find the cluster
     #cluster1, linkage_matrix, list_clusters = agglomerative_clustering(shoping_cart_data)
 
