@@ -241,7 +241,7 @@ def kmeans(dataf):
             fourCount += 1
         if label == 5:
             fiveCount += 1
-    print(oneCount, twoCount, threeCount, fourCount, fiveCount)
+    print(zeroCount, oneCount, twoCount, threeCount, fourCount, fiveCount)
     print(km.cluster_centers_)
 
 def main():
