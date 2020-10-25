@@ -148,10 +148,11 @@ def agglomerative_clustering(dataf, number_of_clusters = 1):
         new_cluster, cluster1_id, cluster2_id = clustering(distances, datapoints, cluster_indexs)
         cluster_indexs+=1
 
-        # add the new cluster
-        # remove the old clusters from the list
+        # remove the old clusters from the dataframe
         datapoints.drop(cluster1_id, axis=0, inplace=True)
         datapoints.drop(cluster2_id, axis=0, inplace=True)
+
+        # add the new cluster to the dataframe
         datapoints = datapoints.append({'cluster': new_cluster}, ignore_index=True)
 
         # update all of the cluster centers
@@ -159,12 +160,20 @@ def agglomerative_clustering(dataf, number_of_clusters = 1):
         cluster_centers.drop(cluster2_id, axis=0, inplace=True)
 
         cluster_centers = cluster_centers.append(pd.Series(new_cluster.center, dataf.columns), ignore_index=True)
+
+        # Creating a linkage matrix for future use when creating dendrogram
+        # we create it here since order matters
         linkage_matrix.append([new_cluster.left_cluster.index, new_cluster.right_cluster.index,
                               new_cluster.distance, new_cluster.number_of_points])
 
     return new_cluster, linkage_matrix, datapoints
 
 def compute_distance_matrix(dataf):
+    '''
+    whole matrix of distances, gets all the distances between every point (Cluster)
+    :param dataf: dataframe
+    :return:
+    '''
     matrix = pd.DataFrame(
         squareform(pdist(dataf)),
         columns=dataf.index,
@@ -218,11 +227,22 @@ def min_distance(dataf):
 
 
 def clustering(distances, data_sets, index):
+    '''
+    Combines clusters and returns the old cluster's ID for future use
+    :param distances: distance matrix
+    :param data_sets: data
+    :param index: order in which the cluster was created
+    :return:
+    '''
+
+    # Gets the minimum distance between clusters
     cluster1_id, cluster2_id, distance = min_distance(distances)
 
+    # Gets the clusters associated with minimum distance
     cluster1 = data_sets.loc[cluster1_id].cluster
     cluster2 = data_sets.loc[cluster2_id].cluster
 
+    # merges the clusters together
     new_cluster = cluster(cluster1, cluster2, distance, index)
 
     #compute_distance(data_sets, new_cluster, distances)
@@ -230,10 +250,20 @@ def clustering(distances, data_sets, index):
     return new_cluster, cluster1_id, cluster2_id
 
 def kmeans(dataf):
+    '''
+    Calculates the centers and counts for n = 6 clusters using KMeans
+    :param dataf:
+    :return:
+    '''
+    # Turn data into matrix
     mat = dataf.values
+    # Do KMeans for 6 clusters
     km = KMeans(n_clusters=6)
     km.fit(mat)
+    # Labels is used to count the number of items per cluster
     labels = km.labels_
+
+    # This Loop is used to count
     zeroCount = 0
     oneCount = 0
     twoCount = 0
@@ -253,6 +283,8 @@ def kmeans(dataf):
             fourCount += 1
         if label == 5:
             fiveCount += 1
+
+    # Print count and the centers
     print(zeroCount, oneCount, twoCount, threeCount, fourCount, fiveCount)
     print(km.cluster_centers_)
 
