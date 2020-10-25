@@ -196,7 +196,7 @@ def compute_distances(data_sets):
 
     return distances
 
-
+# DEPRECATED
 # def compute_distance(datasets, cluster, distances):
 #     '''
 #     computes the distance between one cluster, and the other datasets
