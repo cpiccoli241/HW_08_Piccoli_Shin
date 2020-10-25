@@ -222,8 +222,27 @@ def kmeans(dataf):
     km = KMeans(n_clusters=6)
     km.fit(mat)
     labels = km.labels_
-    results = pd.DataFrame([dataf.index, labels]).T
-    return results
+    zeroCount = 0
+    oneCount = 0
+    twoCount = 0
+    threeCount = 0
+    fourCount = 0
+    fiveCount = 0
+    for label in labels:
+        if label == 0:
+            zeroCount += 1
+        if label == 1:
+            oneCount += 1
+        if label == 2:
+            twoCount += 1
+        if label == 3:
+            threeCount += 1
+        if label == 4:
+            fourCount += 1
+        if label == 5:
+            fiveCount += 1
+    print(oneCount, twoCount, threeCount, fourCount, fiveCount)
+    print(km.cluster_centers_)
 
 def main():
     parser = ArgumentParser()
@@ -247,7 +266,7 @@ def main():
     cluster1, linkage_matrix = agglomerative_clustering(shoping_cart_data)
     print(cluster1)
     dg.dendrogram_plot(linkage_matrix, 6)
-    kmresult = kmeans(shoping_cart_data)
+    kmeans(shoping_cart_data)
 
 if __name__ == '__main__':
     main()
