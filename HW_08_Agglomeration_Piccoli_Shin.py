@@ -117,22 +117,37 @@ def agglomerative_clustering(dataf):
     :return: agglomeratively clustered data
     '''
 
+    cluster_centers = pd.DataFrame(dataf)
+
     # This loop takes in all 850 points and makes 850 datapoints
-    datapoints = []
+    temp = []
     for index in range(len(dataf)):
         vector = dataf.iloc[index].to_numpy()
-        point = data_point(vector)
-        datapoints.append(point)
+        point = data_point(vector, index)
+        temp.append({"cluster" : point})
+    datapoints = pd.DataFrame(temp)
 
     # Clustering starts
-    clusters = []
+    cluster_indexs = len(dataf)
+    while len(datapoints) > 1:
+        distances = compute_distance_matrix(cluster_centers)
+        new_cluster, cluster1_id, cluster2_id = clustering(distances, datapoints, cluster_indexs)
+        cluster_indexs+=1
 
-    distances = compute_distance_matrix(dataf)
+        # add the new cluster
+        # remove the old clusters from the list
+        datapoints.drop(cluster1_id, axis=0, inplace=True)
+        datapoints.drop(cluster2_id, axis=0, inplace=True)
+        datapoints = datapoints.append({'cluster': new_cluster}, ignore_index=True)
 
-    while len(distances) > 1:
-        cluster1, distances, datapoints = clustering(distances, datapoints)
+        # update all of the cluster centers
+        cluster_centers.drop(cluster1_id, axis=0, inplace=True)
+        cluster_centers.drop(cluster2_id, axis=0, inplace=True)
 
-    return cluster1
+        cluster_centers = cluster_centers.append(pd.Series(new_cluster.center, dataf.columns), ignore_index=True)
+
+
+    return new_cluster
 
 def compute_distance_matrix(dataf):
     matrix = pd.DataFrame(
@@ -171,26 +186,33 @@ def compute_distance(datasets, cluster, distances):
 
 
 def min_distance(dataf):
-    return dataf.min(level = "distance")
+    '''
+    Gets the min distance of the pairwise matrix
+    :param dataf:
+    :return: row of cluster2 distance
+    '''
+    min_distances = pd.DataFrame({"cluster2" :dataf[dataf.gt(0)].idxmin(0), "distances":dataf[dataf.gt(0)].min(0)})
+    # returns all the rows with the min distances
+    min_distances =  min_distances[min_distances['distances'] == min_distances['distances'].min()]
+
+    # picks the first on in the list arbitarily
+    pairs = min_distances[min_distances['cluster2'] == min_distances.index[0]]
+
+    # this is a dataframe of size 1
+    return pairs.index[0], pairs['cluster2'].iloc[0], pairs['distances'].iloc[0]
 
 
-def clustering(distances, data_sets):
-    best_row = min_distance(distances)
-    cluster1 = best_row["cluster1"]
-    cluster2 = best_row["cluster2"]
+def clustering(distances, data_sets, index):
+    cluster1_id, cluster2_id, distance = min_distance(distances)
 
-    # drop all the rows with the clusters 1 or 2 in them
-    distances = distances[distances["cluster1"] != cluster1]
-    distances = distances[distances["cluster1"] != cluster2]
-    distances = distances[distances["cluster2"] != cluster1]
-    distances = distances[distances["cluster2"] != cluster2]
-    new_cluster = cluster(cluster1, cluster2)
+    cluster1 = data_sets.loc[cluster1_id].cluster
+    cluster2 = data_sets.loc[cluster2_id].cluster
 
-    compute_distance(data_sets, new_cluster, distances)
-    data_sets.remove(cluster1)
-    data_sets.remove(cluster2)
+    new_cluster = cluster(cluster1, cluster2, distance, index)
 
-    return new_cluster, distances, data_sets
+    #compute_distance(data_sets, new_cluster, distances)
+
+    return new_cluster, cluster1_id, cluster2_id
 
 
 def main():
@@ -209,8 +231,12 @@ def main():
     cross = cross_correlation(shoping_cart_data)
     question_2(cross)
 
+    #remove ids
     shoping_cart_data = remove_id(shoping_cart_data)
-    print(agglomerative_clustering(shoping_cart_data))
+    #find the cluster
+    cluster1 = agglomerative_clustering(shoping_cart_data)
+    print(cluster1.get_linkage_matrix())
+    print(cluster1)
 
 
 if __name__ == '__main__':
